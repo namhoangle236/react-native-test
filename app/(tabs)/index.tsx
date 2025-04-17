@@ -5,6 +5,8 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
+import popCornEatingGif from '../../assets/images/pop-corn-eating.gif';   //need to import image first before use
+
 export default function HomeScreen() {
   return (
     <ParallaxScrollView
@@ -20,7 +22,12 @@ export default function HomeScreen() {
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
+        <ThemedText type="subtitle">Step 1: Try it (I did!)</ThemedText>
+        <Image source={popCornEatingGif} />                                 {/*Add gif here after import... weird*/}
+        <ThemedText>
+          A little like React.... but pretty confusing with all the themed text/view etc...
+        </ThemedText>
+
         <ThemedText>
           Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
           Press{' '}
