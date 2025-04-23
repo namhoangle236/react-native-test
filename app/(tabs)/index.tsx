@@ -1,81 +1,106 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { View, TextInput, Button, FlatList, Text, ScrollView } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 
-import popCornEatingGif from '../../assets/images/pop-corn-eating.gif';   //need to import image first before use
+//  ========================================== Sample data array ==========================================
+const data = [
+  { id: '1', name: 'Exia' },
+  { id: '2', name: 'Nu' },
+  { id: '3', name: 'Unicorn' },
+  { id: '4', name: 'RX-78-2' },
+  { id: '5', name: 'Calibarn' },
+  { id: '6', name: 'Gundam' },
+  { id: '7', name: 'Zaku' },
+  { id: '8', name: 'G-Self' },
+  { id: '9', name: 'Wing Zero' },
+  { id: '10', name: 'Sazabi' },
+  { id: '11', name: 'Sinanju' },
+  { id: '12', name: 'Barbatos' },
+  { id: '13', name: 'Aerial' },
+  { id: '14', name: 'Dynames' },
+];
 
-export default function HomeScreen() {
+
+// ======================================== Main function component ==========================================
+
+// note:
+// 'search' state variable is used to store the search input, continuously updated via onChangeText={setSearch} as the user types
+// 'handleSearch' is called when the 'search' button is pressed via onPress={handleSearch}
+// For each item in 'data', compare the 'name' property with the 'search' input using 'filter' and 'include' method. Then assigned to 'result' variable
+// 'filteredData' is updated with 'result', to be displayed later in the flatlist
+
+export default function App() {
+  const [search, setSearch] = useState('');
+  const [filteredData, setFilteredData] = useState(data);
+
+  const handleSearch = () => {
+    const result = data.filter(item =>
+      item.name.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredData(result);
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it (I did!)</ThemedText>
-        <Image source={popCornEatingGif} />                                 {/*Add gif here after import... weird*/}
-        <ThemedText>
-          A little like React.... but pretty confusing with all the themed text/view etc...
-        </ThemedText>
+    <ScrollView>
+      <View
+        style={{
+          padding: 20,
+          backgroundColor: 'black',
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
 
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        <TextInput
+          placeholder="Search your Gundam"
+          value={search}
+          onChangeText={setSearch}
+          style={{
+            borderWidth: 1,
+            borderColor: 'white',
+            color: 'white',
+            padding: 8,
+            marginBottom: 10 }}
+        />
+
+        <Button title="Search" onPress={handleSearch} />
+
+        <FlatList
+          data={filteredData}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <Text style={{ padding: 10, fontSize: 18, color: 'white' }}>
+              {item.name}
+            </Text>
+          )}
+        />
+
+      </View>
+
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+
+// Study notes:
+//
+// FlatList has some key props (data, keyExtractor, renderItem)
+// 'item' in keyExtractor is the object in the data array. Ex: { id: '1', name: 'Exia' }
+//
+// HOWEVER! 'item' in renderItem is the object in another array created behind the scene by FlatList using the objects in the 'data' array !!! Weird AF
+// <FlatList> internally takes each item from data and wraps it in an object
+//
+// Like this: 
+// {
+//   item: { id: '1', name: 'Exia' },
+//   index: 0,
+//   separators: { ... }
+// }
+//
+// Hence, why it looks like this:
+// renderItem={({ item }) => (                ie: for each object in the array, take the 'item' property of the object, and do stuff
+//
+// and NOT:
+//
+// renderItem={(item) => (                    ie: for each object in the array, take the object itself, and do stuff
