@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, FlatList, Text, ScrollView } from 'react-native';
+import { View, TextInput, FlatList, Text, ScrollView } from 'react-native';
+
+import { useNavigation } from '@react-navigation/native';   // To navigate to a specific Gundam detail screen
 
 
 //  ========================================== Sample data array ==========================================
@@ -8,6 +10,16 @@ const data = [
   { id: '2', name: 'Nu' },
   { id: '3', name: 'Unicorn' },
   { id: '4', name: 'RX-78-2' },
+  { id: '5', name: 'Zaku' },
+  { id: '6', name: 'Gundam Wing' },
+  { id: '7', name: 'Gundam Barbatos' },
+  { id: '8', name: 'Gundam Age' },
+  { id: '9', name: 'Gundam Seed' },
+  { id: '10', name: 'Gundam Double O' },
+  { id: '11', name: 'Gundam 00 Qan[T]' },
+  { id: '12', name: 'Gundam F91' },
+  { id: '13', name: 'Gundam G' },
+  { id: '14', name: 'Gundam X' },
 ];
 
 
@@ -19,9 +31,11 @@ const data = [
 // For each item in 'data', compare the 'name' property with the 'text' input using 'filter' and 'include' method. Then assigned to 'result' variable
 // 'filteredData' is updated with 'result', to be displayed later in the flatlist
 
-export default function App() {
+export default function GundamSearch() {
   const [search, setSearch] = useState('');
   const [filteredData, setFilteredData] = useState(data);
+  const navigation = useNavigation();
+
 
   const handleSearch = (text: string) => {
     setSearch(text);
@@ -29,6 +43,11 @@ export default function App() {
       item.name.toLowerCase().includes(text.toLowerCase())
     );
     setFilteredData(result);
+  };
+
+  const handleNavigateToDetail = (item) => {
+    console.log(item);  // bug check
+    navigation.navigate('GundamDetail', { item });        // Navigate to the detail screen and pass along the item
   };
 
   return (
@@ -60,7 +79,10 @@ export default function App() {
           data={filteredData}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <Text style={{ padding: 10, fontSize: 18, color: 'white' }}>
+            <Text
+              style={{ padding: 10, fontSize: 18, color: 'white' }}
+              onPress={() => handleNavigateToDetail(item)}          // Navigate when tapped, passing the item to GundamDetail
+            >
               {item.name}
             </Text>
           )}
