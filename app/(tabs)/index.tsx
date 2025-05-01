@@ -8,16 +8,6 @@ const data = [
   { id: '2', name: 'Nu' },
   { id: '3', name: 'Unicorn' },
   { id: '4', name: 'RX-78-2' },
-  { id: '5', name: 'Calibarn' },
-  { id: '6', name: 'Gundam' },
-  { id: '7', name: 'Zaku' },
-  { id: '8', name: 'G-Self' },
-  { id: '9', name: 'Wing Zero' },
-  { id: '10', name: 'Sazabi' },
-  { id: '11', name: 'Sinanju' },
-  { id: '12', name: 'Barbatos' },
-  { id: '13', name: 'Aerial' },
-  { id: '14', name: 'Dynames' },
 ];
 
 
@@ -25,17 +15,18 @@ const data = [
 
 // note:
 // 'search' state variable is used to store the search input, continuously updated via onChangeText={setSearch} as the user types
-// 'handleSearch' is called when the 'search' button is pressed via onPress={handleSearch}
-// For each item in 'data', compare the 'name' property with the 'search' input using 'filter' and 'include' method. Then assigned to 'result' variable
+// 'handleSearch' is called as the user types in the TextInput, updating the 'search' state variable
+// For each item in 'data', compare the 'name' property with the 'text' input using 'filter' and 'include' method. Then assigned to 'result' variable
 // 'filteredData' is updated with 'result', to be displayed later in the flatlist
 
 export default function App() {
   const [search, setSearch] = useState('');
   const [filteredData, setFilteredData] = useState(data);
 
-  const handleSearch = () => {
+  const handleSearch = (text: string) => {
+    setSearch(text);
     const result = data.filter(item =>
-      item.name.toLowerCase().includes(search.toLowerCase())
+      item.name.toLowerCase().includes(text.toLowerCase())
     );
     setFilteredData(result);
   };
@@ -55,7 +46,7 @@ export default function App() {
         <TextInput
           placeholder="Search your Gundam"
           value={search}
-          onChangeText={setSearch}
+          onChangeText={handleSearch}
           style={{
             borderWidth: 1,
             borderColor: 'white',
@@ -64,7 +55,6 @@ export default function App() {
             marginBottom: 10 }}
         />
 
-        <Button title="Search" onPress={handleSearch} />
 
         <FlatList
           data={filteredData}
