@@ -1,26 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, TextInput, FlatList, Text, ScrollView } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';   // To navigate to a specific Gundam detail screen
 
+import GundamForm from '@/components/GundamForm';           // Import the GundamForm component
 
-//  ========================================== Sample data array ==========================================
-const data = [
-  { id: '1', name: 'Exia' },
-  { id: '2', name: 'Nu' },
-  { id: '3', name: 'Unicorn' },
-  { id: '4', name: 'RX-78-2' },
-  { id: '5', name: 'Zaku' },
-  { id: '6', name: 'Gundam Wing' },
-  { id: '7', name: 'Gundam Barbatos' },
-  { id: '8', name: 'Gundam Age' },
-  { id: '9', name: 'Gundam Seed' },
-  { id: '10', name: 'Gundam Double O' },
-  { id: '11', name: 'Gundam 00 Qan[T]' },
-  { id: '12', name: 'Gundam F91' },
-  { id: '13', name: 'Gundam G' },
-  { id: '14', name: 'Gundam X' },
-];
+import { GundamContext } from '@/context/GundamContext';    // import the GundamContext to access the Gundam info
+
+
 
 
 // ======================================== Main function component ==========================================
@@ -28,23 +15,33 @@ const data = [
 // note:
 // 'search' state variable is used to store the search input, continuously updated via onChangeText={setSearch} as the user types
 // 'handleSearch' is called as the user types in the TextInput, updating the 'search' state variable
-// For each item in 'data', compare the 'name' property with the 'text' input using 'filter' and 'include' method. Then assigned to 'result' variable
+// For each item in 'GundamInfo', compare the 'name' property with the 'text' input using 'filter' and 'include' method. Then assigned to 'result' variable
 // 'filteredData' is updated with 'result', to be displayed later in the flatlist
 
 export default function GundamSearch() {
   const [search, setSearch] = useState('');
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState([]);
   const navigation = useNavigation();
 
+  const { GundamInfo } = useContext(GundamContext);       // use the context to get the Gundam info
 
+
+  // Search function
   const handleSearch = (text: string) => {
     setSearch(text);
-    const result = data.filter(item =>
+    const result = GundamInfo.filter(item =>
       item.name.toLowerCase().includes(text.toLowerCase())
     );
     setFilteredData(result);
   };
 
+  useEffect(() => {
+    setFilteredData(GundamInfo);
+  }, [GundamInfo]);                                       // Changes in GundamInfo will update the filteredData to show all Gundams when the component mounts or GundamInfo changes
+  
+  
+
+  // Navigation function when clicking on a Gundam item
   const handleNavigateToDetail = (item) => {
     console.log(item);  // bug check
     navigation.navigate('GundamDetail', { item });        // Navigate to the detail screen and pass along the item
@@ -61,7 +58,11 @@ export default function GundamSearch() {
           alignItems: 'center',
         }}
       >
+        {/* passing userinput to Gundam context*/}
+        <GundamForm />
 
+
+        {/* Search bar */}
         <TextInput
           placeholder="Search your Gundam"
           value={search}
@@ -87,6 +88,8 @@ export default function GundamSearch() {
             </Text>
           )}
         />
+
+
 
       </View>
 
