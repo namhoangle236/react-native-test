@@ -8,6 +8,9 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
+// Import Tanstack query provider
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+
 // Import the context
 import { GundamContext } from '../context/GundamContext';
 
@@ -20,6 +23,10 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
+
+
+  // Create new Tanstack query client
+  const GundamDB = new QueryClient()
 
 
   // // Create state to hold Gundam info and pass it into the context provider later
@@ -37,14 +44,16 @@ export default function RootLayout() {
   }
 
   return (
-    <GundamContext.Provider value={{ GundamInfo, setGundamInfo }}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
-    </GundamContext.Provider>
+    <QueryClientProvider client={GundamDB}>
+      <GundamContext.Provider value={{ GundamInfo, setGundamInfo }}>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </GundamContext.Provider>
+    </QueryClientProvider>
   );
 }

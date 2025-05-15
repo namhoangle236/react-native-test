@@ -7,6 +7,7 @@ import GundamForm from '@/components/GundamForm';           // Import the Gundam
 
 import { GundamContext } from '@/context/GundamContext';    // import the GundamContext to access the Gundam info
 
+import {GundamOnlineData} from '@/components/GundamOnlineData'; // Import the GundamOnlineData component to fetch data from the Supabase API
 
 
 
@@ -26,6 +27,7 @@ export default function GundamSearch() {
   const { GundamInfo } = useContext(GundamContext);       // use the context to get the Gundam info
 
 
+
   // Search function
   const handleSearch = (text: string) => {
     setSearch(text);
@@ -36,7 +38,15 @@ export default function GundamSearch() {
   };
 
   useEffect(() => {
-    setFilteredData(GundamInfo);
+    setFilteredData(
+    GundamInfo.map((item, idx) => ({
+      // if item.id exists use that, otherwise fall back to index
+      id: item.id != null 
+        ? item.id.toString() 
+        : idx.toString(),
+      ...item
+    }))
+  )
   }, [GundamInfo]);                                       // Changes in GundamInfo will update the filteredData to show all Gundams when the component mounts or GundamInfo changes
   
   
@@ -76,6 +86,11 @@ export default function GundamSearch() {
         />
 
 
+        {/* Supabase DATA */}
+        <GundamOnlineData />
+
+
+        {/* FlatList to display the filtered user-entered data */}
         <FlatList
           data={filteredData}
           keyExtractor={(item) => item.id}

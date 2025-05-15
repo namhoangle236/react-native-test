@@ -3,7 +3,7 @@ import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { GundamContext } from '../context/GundamContext';
 
 export default function GundamForm() {
-    const { GundamInfo, setGundamInfo } = useContext(GundamContext); //use the context to get the setGundamInfo function and the current list   
+    const { GundamInfo, setGundamInfo } = useContext(GundamContext); //use the context to get the setGundamInfo function and the current list to update it  
   
   // takes these 2, and set them as the info for the Gundam
   const [name, setName] = useState('');                             // name of Gundam
