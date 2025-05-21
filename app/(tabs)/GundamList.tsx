@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { GundamContext } from '../../context/GundamContext';
 
-import { useNavigation } from '@react-navigation/native';                 // To navigate to a specific Gundam detail screen
+// import { useNavigation } from '@react-navigation/native';                 // To navigate to a specific Gundam detail screen
 
 
 export default function GundamList() {
