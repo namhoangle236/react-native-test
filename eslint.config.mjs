@@ -2,6 +2,7 @@
 
 import eslintPluginPrettier from 'eslint-plugin-prettier';
 import eslintPluginReact from 'eslint-plugin-react';
+import tsParser from '@typescript-eslint/parser';         // Importing the TypeScript parser for ESLint
 
 export default [
   {
@@ -9,8 +10,12 @@ export default [
     files: ['**/*.{js,jsx,ts,tsx}'],
 
     languageOptions: {
-      ecmaVersion: 'latest', // updated from 12 to latest for modern JS support
-      sourceType: 'module',
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: { jsx: true },
+      },
       globals: {
         window: 'readonly',
         document: 'readonly',
@@ -36,8 +41,8 @@ export default [
       'react/react-in-jsx-scope': 'off', // DISABLE this outdated rule
       'prettier/prettier': 'off',        // treat Prettier issues as ESLint errors -> turn this off
       'no-unused-vars': 'warn',          // will warn if variables are unused
-      'semi': ['error', 'always'],       // enforces semicolons
-      'quotes': 'off',                   // 🔧 disable quote rule
+      'semi': ['off'],                   // Doesn't enforces semicolons
+      'quotes': 'off',                   // 🔧 disable quote rule, either "" or '' is fine
     },
   },
 ];
