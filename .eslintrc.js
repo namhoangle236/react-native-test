@@ -9,7 +9,7 @@ module.exports = {
     'plugin:react/recommended',
     'prettier', // disables ESLint rules that might conflict with Prettier
   ],
-  plugins: ['prettier'],
+  plugins: ['react', 'prettier'],
   parserOptions: {
     ecmaVersion: 'latest', // updated from 12 to latest for modern JS support
     sourceType: 'module',
