@@ -1,13 +1,43 @@
-import js from "@eslint/js";
-import globals from "globals";
-import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
-import { defineConfig } from "eslint/config";
+// ESLint flat config (no legacy "env", fully compatible with Flat Config)
 
+import eslintPluginPrettier from 'eslint-plugin-prettier';
+import eslintPluginReact from 'eslint-plugin-react';
 
-export default defineConfig([
-  { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], plugins: { js }, extends: ["js/recommended"] },
-  { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], languageOptions: { globals: globals.browser } },
-  tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
-]);
+export default [
+  {
+    // File pattern to apply config to
+    files: ['**/*.{js,jsx,ts,tsx}'],
+
+    languageOptions: {
+      ecmaVersion: 'latest', // updated from 12 to latest for modern JS support
+      sourceType: 'module',
+      globals: {
+        window: 'readonly',
+        document: 'readonly',
+        console: 'readonly',
+        process: 'readonly',
+        require: 'readonly',
+        module: 'readonly',
+      },
+    },
+
+    plugins: {
+      prettier: eslintPluginPrettier,
+      react: eslintPluginReact,
+    },
+
+    settings: {
+      react: {
+        version: 'detect', // auto-detect React version
+      },
+    },
+
+    rules: {
+      'react/react-in-jsx-scope': 'off', // DISABLE this outdated rule
+      'prettier/prettier': 'off',        // treat Prettier issues as ESLint errors -> turn this off
+      'no-unused-vars': 'warn',          // will warn if variables are unused
+      'semi': ['error', 'always'],       // enforces semicolons
+      'quotes': 'off',                   // 🔧 disable quote rule
+    },
+  },
+];
