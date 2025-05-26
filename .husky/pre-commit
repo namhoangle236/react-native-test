@@ -1,0 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔍 Running ESLint..."
+npx eslint .
+
+echo "🧪 Running unit tests..."
+npm test -- --bail --watchAll=false
