@@ -4,18 +4,30 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from './supabase'
 
 export function GundamOnlineData() {
+  // const { isLoading, error, data } = useQuery({
+  //   queryKey: ['GundamData'],
+  //   queryFn: () =>
+  //     supabase
+  //       .from('GundamData')     // ← table name
+  //       .select('*')            // ← no manual URL or headers needed
+  //       .then(({ data, error }) => {
+  //         if (error) throw error
+  //         console.log('fetched rows:', data)
+  //         return data
+  //       }),
+  // })
+
   const { isLoading, error, data } = useQuery({
     queryKey: ['GundamData'],
-    queryFn: () =>
-      supabase
-        .from('GundamData')     // ← table name
-        .select('*')            // ← no manual URL or headers needed
-        .then(({ data, error }) => {
-          if (error) throw error
-          console.log('fetched rows:', data)
-          return data
-        }),
-  })
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('GundamData')
+        .select('*');
+      if (error) throw error;
+      console.log('fetched rows:', data);
+      return data;
+    },
+  });
 
   if (isLoading) return <Text>Loading…</Text>
   if (error)     return <Text>Error: {error.message}</Text>
